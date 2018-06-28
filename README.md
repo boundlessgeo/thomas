@@ -24,6 +24,8 @@ To get up and running:
 - `export PYTHONPATH=$PATHONPATH:.`
 - Get the precomputed model weights from S3, either `s3://tomsorflow/coco/mask_rcnn_coco.h5` or `s3://tomsorflow/buildings/mask_rcnn_buildings_1.h5`
 
+The `setup_env.sh` should do the trick most of the time  
+
 #### Training
 
 #### Analyzing
