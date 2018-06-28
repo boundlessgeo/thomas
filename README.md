@@ -2,7 +2,7 @@
 
 ![Thomas](docs/img/thomas.png "Thomas")
 
-##### About
+#### About
 Thomas is a training engine that runs on [coal](https://github.com/boundlessgeo/coal)
 
 Being cute aside, thomas is an object detection and segmentation model that we extend to detect objects in imagery - using Tensorflow, Keras amd Coco.
