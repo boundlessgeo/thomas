@@ -31,7 +31,7 @@ def index():
 @app.route('/tiles/<int:z>/<int:x>/<int:y>', methods=['GET'])
 def tile(z, x, y):
     global model
-    if model = none
+    if model == None:
         config = BuildingConfig()
         model = modellib.MaskRCNN(mode="inference", config=config,
                               model_dir=MODEL_DIR)
