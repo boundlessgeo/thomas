@@ -21,14 +21,8 @@ if(PLATFORM.startswith("Darwin")):
 MODEL_DIR = os.path.join(ROOT_DIR,"logs")
 WEIGHTS=os.path.join(ROOT_DIR,'mask_rcnn_buildings_1.h5')
 
-config = BuildingConfig()
-global model
-model = modellib.MaskRCNN(mode="inference", config=config,
-                              model_dir=MODEL_DIR)
-model.load_weights(WEIGHTS, by_name=True)
-global graph
-graph = tf.get_default_graph()
 
+model = None
 
 @app.route('/', methods=['GET'])
 def index():
@@ -36,6 +30,18 @@ def index():
 
 @app.route('/tiles/<int:z>/<int:x>/<int:y>', methods=['GET'])
 def tile(z, x, y):
+    global model
+    if model = none
+        config = BuildingConfig()
+        model = modellib.MaskRCNN(mode="inference", config=config,
+                              model_dir=MODEL_DIR)
+        model.load_weights(WEIGHTS, by_name=True)
+        #global graph
+        #graph = tf.get_default_graph()
+
+
+
+
     with graph.as_default():
         request_start_time = time.time()
         #if z != 18:
