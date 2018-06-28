@@ -21,16 +21,7 @@ if(PLATFORM.startswith("Darwin")):
 MODEL_DIR = os.path.join(ROOT_DIR,"logs")
 WEIGHTS=os.path.join(ROOT_DIR,'mask_rcnn_buildings_1.h5')
 
-
-
-class InferenceConfig(BuildingConfig):
-        # Set batch size to 1 since we'll be running inference on
-        # one image at a time. Batch size = GPU_COUNT * IMAGES_PER_GPU
-    GPU_COUNT = 1
-    IMAGES_PER_GPU = 8
-
-
-config = InferenceConfig()
+config = BuildingConfig()
 global model
 model = modellib.MaskRCNN(mode="inference", config=config,
                               model_dir=MODEL_DIR)
