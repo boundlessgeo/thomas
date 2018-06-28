@@ -7,7 +7,7 @@ import os, platform
 from mrcnn import model as modellib, visualize
 from PIL import Image, ImageColor
 from io import BytesIO
-import tensorflow as tf
+import keras
 app = Flask(__name__)
 
 
@@ -19,7 +19,7 @@ if(PLATFORM.startswith("Darwin")):
     ROOT_DIR = os.path.abspath("/Users/tingold/code/thomas/")
 
 MODEL_DIR = os.path.join(ROOT_DIR,"logs")
-WEIGHTS=os.path.join(ROOT_DIR,'mask_rcnn_buildings_1.h5')
+WEIGHTS = os.path.join(ROOT_DIR,'mask_rcnn_buildings_1.h5')
 
 
 model = None
@@ -32,6 +32,7 @@ def index():
 def tile(z, x, y):
     global model
     if model == None:
+        keras.backend.clear_session()
         config = BuildingConfig()
         model = modellib.MaskRCNN(mode="inference", config=config,
                               model_dir=MODEL_DIR)
