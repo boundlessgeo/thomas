@@ -22,10 +22,10 @@ from mrcnn import model as modellib, visualize
 # Root directory of the project
 PLATFORM = platform.platform()
 print(PLATFORM)
-ROOT_DIR = os.path.abspath("/home/ubuntu/Mask_RCNN/")
+ROOT_DIR = os.path.abspath("/home/ubuntu/thomas/")
 
 if(PLATFORM.startswith("Darwin")):
-    ROOT_DIR = os.path.abspath("/Users/tingold/code/Mask_RCNN/")
+    ROOT_DIR = os.path.abspath("/Users/tingold/code/thomas/")
 
 MODEL_DIR = os.path.join(ROOT_DIR,"logs")
 COCO_MODEL_PATH = os.path.join(ROOT_DIR, "mask_rcnn_coco.h5")
