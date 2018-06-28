@@ -41,7 +41,7 @@ class BuildingConfig(Config):
     to the toy shapes dataset.
     """
     # Give the configuration a recognizable name
-    NAME = "buildings"
+    NAME = "objects"
 
     # Train on 1 GPU and 8 images per GPU. We can put multiple images on each
     # GPU because the images are small. Batch size is 8 (GPUs * images/GPU).
@@ -74,15 +74,15 @@ class BuildingConfig(Config):
 
 class BuildingDataset(utils.Dataset):
 
-    #PATH = '/Users/tingold/code/Mask_RCNN/samples/buildings/training_data'
-    PATH = os.path.join(ROOT_DIR,'samples/buildings/training_data')
+    #PATH = '/Users/tingold/code/Mask_RCNN/samples/objects/training_data'
+    PATH = os.path.join(ROOT_DIR,'samples/objects/training_data')
 
     image_lookup = []
 
     def load_buildings(self,):
 
-        self.add_class("buildings", 1, "building")
-        print("Loading buildings")
+        self.add_class("objects", 1, "building")
+        print("Loading objects")
 
         image_filenames = os.listdir(self.PATH + '/sat')
         cnt = 0
@@ -92,7 +92,7 @@ class BuildingDataset(utils.Dataset):
 
             abs_img = self.PATH + "/sat/" + img_file
             self.image_lookup.insert(cnt, id)
-            self.add_image("buildings", image_id=cnt, path=abs_img, width=256, height=256)
+            self.add_image("objects", image_id=cnt, path=abs_img, width=256, height=256)
 
     # TODO fix this
     def load_mask(self, image_id):
@@ -173,7 +173,7 @@ if __name__ == '__main__':
 
     # Parse command line arguments
     parser = argparse.ArgumentParser(
-        description='Train Mask R-CNN to detect buildings.')
+        description='Train Mask R-CNN to detect objects.')
     parser.add_argument("command",
                         metavar="<command>",
                         help="'train' or 'run'")
