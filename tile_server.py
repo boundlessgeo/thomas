@@ -63,4 +63,4 @@ def tile(z, x, y):
         return send_file(byte_io, mimetype='image/png')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0')
