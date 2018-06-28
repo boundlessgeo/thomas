@@ -94,7 +94,6 @@ class BuildingDataset(utils.Dataset):
             self.image_lookup.insert(cnt, id)
             self.add_image("objects", image_id=cnt, path=abs_img, width=256, height=256)
 
-    # TODO fix this
     def load_mask(self, image_id):
         # Build mask of shape [height, width, instance_count] and list
         # of class IDs that correspond to each channel of the mask.
@@ -116,8 +115,6 @@ class BuildingDataset(utils.Dataset):
         class_ids[0] = 1
 
         return data, class_ids
-
-
 
 
     def load_image(self, image_id):
