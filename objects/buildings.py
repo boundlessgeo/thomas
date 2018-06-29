@@ -76,7 +76,7 @@ class BuildingConfig(Config):
 class BuildingDataset(utils.Dataset):
 
     #PATH = '/Users/tingold/code/Mask_RCNN/samples/objects/training_data'
-    PATH = os.path.join(ROOT_DIR,'samples/objects/training_data')
+    PATH = os.path.join(ROOT_DIR,'objects/training_data')
 
     image_lookup = []
 
