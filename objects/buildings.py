@@ -104,7 +104,6 @@ class BuildingDataset(utils.Dataset):
         mask_dir = self.PATH+'/osm/'+real_image_id+'/**'
         masks = glob.glob(mask_dir)
         # masks should be an array of file names like building-0-Z_X_Y.png
-        print(str(len(masks))+" masks")
         mask_array = np.empty((256, 256, len(masks)), dtype=np.uint8)
 
         for i, m in enumerate(masks):
