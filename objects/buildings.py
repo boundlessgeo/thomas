@@ -105,7 +105,7 @@ class BuildingDataset(utils.Dataset):
         masks = glob.glob(mask_dir,'*'+self.image_lookup[image_id])
         # masks should be an array of file names like building-0-Z_X_Y.png
 
-        mask_array = np.array((256,256,len(masks)), dtype=np.uint8)
+        mask_array = np.zeros((256, 256, len(masks)), dtype=np.uint8)
 
         for x in range(len(masks)):
             mask_image = Image.open(mask_dir+"/"+masks[x])
@@ -113,17 +113,11 @@ class BuildingDataset(utils.Dataset):
             mask = Image.open(mask_image)
             red, green, blue, alpha = mask.split()
             # Pack x masks into an array
-            mask_array[x] = red
+            mask_array[256, 256, x] = red
 
-        data = np.array(red)
+        class_ids = np.ones([len(masks)])
 
-        # hot = lambda v: 0 if v < 1 else 1
-        #f = np.vectorize(hot)
-        # bin_data = f(data)
-        class_ids = np.array([len(masks)])
-        np.ones(class_ids)
-
-        return data, class_ids
+        return mask_array, class_ids
 
 
     def load_image(self, image_id):
