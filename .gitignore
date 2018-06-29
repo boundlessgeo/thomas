@@ -158,3 +158,4 @@ fabric.properties
 .idea/httpRequests
 *.h5
 /objects/training_data/
+/logs/
