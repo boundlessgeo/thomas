@@ -17,6 +17,7 @@ import numpy as np
 import skimage
 from PIL import Image
 import platform
+import glob
 from mrcnn import model as modellib, visualize
 
 # Root directory of the project
@@ -100,19 +101,27 @@ class BuildingDataset(utils.Dataset):
 
         # print("Loading mask for image id "+self.image_lookup[image_id])
 
+        mask_dir = self.PATH+'/osm/'+self.image_lookup[image_id]
+        masks = glob.glob(mask_dir,'*'+self.image_lookup[image_id])
+        # masks should be an array of file names like building-0-Z_X_Y.png
 
-        mask_url = self.PATH+'/osm/osm'+self.image_lookup[image_id]
-        # Pack instance masks into an array
-        mask = Image.open(mask_url)
-        red, green, blue, alpha = mask.split()
-        #mask = skimage.io.imread("file://"+mask_url, as_gray=False)
+        mask_array = np.array((256,256,len(masks)), dtype=np.uint8)
+
+        for x in range(len(masks)):
+            mask_image = Image.open(mask_dir+"/"+masks[x])
+            print(mask_image)
+            mask = Image.open(mask_image)
+            red, green, blue, alpha = mask.split()
+            # Pack x masks into an array
+            mask_array[x] = red
+
         data = np.array(red)
 
         # hot = lambda v: 0 if v < 1 else 1
         #f = np.vectorize(hot)
         # bin_data = f(data)
-        class_ids = np.array([1])
-        class_ids[0] = 1
+        class_ids = np.array([len(masks)])
+        np.ones(class_ids)
 
         return data, class_ids
 
