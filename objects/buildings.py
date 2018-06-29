@@ -82,8 +82,8 @@ class BuildingDataset(utils.Dataset):
 
     def load_buildings(self,):
 
-        self.add_class("objects", 1, "building")
-        print("Loading objects")
+        self.add_class("buildings", 1, "building")
+        print("Loading buildings")
 
         image_filenames = os.listdir(self.PATH + '/sat')
         cnt = 0
@@ -93,7 +93,7 @@ class BuildingDataset(utils.Dataset):
 
             abs_img = self.PATH + "/sat/" + img_file
             self.image_lookup.insert(cnt, id)
-            self.add_image("objects", image_id=cnt, path=abs_img, width=256, height=256)
+            self.add_image("buildings", image_id=cnt, path=abs_img, width=256, height=256)
 
     def load_mask(self, image_id):
         # Build mask of shape [height, width, instance_count] and list
@@ -101,22 +101,21 @@ class BuildingDataset(utils.Dataset):
 
         # print("Loading mask for image id "+self.image_lookup[image_id])
 
-        mask_dir = self.PATH+'/osm/'+self.image_lookup[image_id]
-        masks = glob.glob(os.path.join(mask_dir,'*'+self.image_lookup[image_id]))
+        real_image_id = self.image_lookup[image_id]
+        mask_dir = self.PATH+'/osm/'+real_image_id+'/**'
+        masks = glob.glob(mask_dir)
         # masks should be an array of file names like building-0-Z_X_Y.png
+        print(str(len(masks))+" masks")
+        mask_array = np.empty((256, 256, len(masks)), dtype=np.uint8)
 
-        mask_array = np.zeros((256, 256, len(masks)), dtype=np.uint8)
-
-        for x in range(len(masks)):
-            mask_image = Image.open(mask_dir+"/"+masks[x])
-            print(mask_image)
-            mask = Image.open(mask_image)
-            red, green, blue, alpha = mask.split()
-            # Pack x masks into an array
-            mask_array[256, 256, x] = red
+        for i, m in enumerate(masks):
+            mask_image = Image.open(m)
+            red, green, blue, alpha = mask_image.split()
+            # Pack masks into an array
+            mask_array[..., i-1] = np.asarray(red)
 
         class_ids = np.ones([len(masks)])
-
+        print("loading mask")
         return mask_array, class_ids
 
 
@@ -130,6 +129,7 @@ class BuildingDataset(utils.Dataset):
         img_url = self.PATH + '/sat/sat' + self.image_lookup[image_id]
         # Pack instance masks into an array
         img = Image.open(img_url)
+        print("loading image")
         return np.array(img)
 
 def detect(model):
