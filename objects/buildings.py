@@ -41,7 +41,7 @@ class BuildingConfig(Config):
     to the toy shapes dataset.
     """
     # Give the configuration a recognizable name
-    NAME = "objects"
+    NAME = "buildings"
 
     # Train on 1 GPU and 8 images per GPU. We can put multiple images on each
     # GPU because the images are small. Batch size is 8 (GPUs * images/GPU).
