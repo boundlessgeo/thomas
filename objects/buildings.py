@@ -65,7 +65,7 @@ class BuildingConfig(Config):
     TRAIN_ROIS_PER_IMAGE = 32
 
     # Use a small epoch since the data is simple
-    STEPS_PER_EPOCH = 10
+    STEPS_PER_EPOCH = 100
 
     # use small validation steps since the epoch is small
     VALIDATION_STEPS = 10
@@ -81,7 +81,6 @@ class BuildingDataset(utils.Dataset):
     image_lookup = []
 
     def load_buildings(self,):
-
         self.add_class("buildings", 1, "building")
         print("Loading buildings")
 
@@ -115,7 +114,6 @@ class BuildingDataset(utils.Dataset):
             mask_array[..., i-1] = np.asarray(red)
 
         class_ids = np.ones([len(masks)])
-        print("loading mask")
         return mask_array, class_ids
 
 
@@ -129,7 +127,6 @@ class BuildingDataset(utils.Dataset):
         img_url = self.PATH + '/sat/sat' + self.image_lookup[image_id]
         # Pack instance masks into an array
         img = Image.open(img_url)
-        print("loading image")
         return np.array(img)
 
 def detect(model):
