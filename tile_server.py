@@ -20,7 +20,11 @@ if (PLATFORM.startswith("Darwin")):
 
 MODEL_DIR = os.path.join(ROOT_DIR, "logs")
 WEIGHTS = os.path.join(ROOT_DIR, 'mask_rcnn_buildings_1.h5')
-config = BuildingConfig()
+
+class InferenceConfig(BuildingConfig):
+    IMAGES_PER_GPU = 1
+
+config = InferenceConfig()
 model = modellib.MaskRCNN(mode="inference", config=config, model_dir=MODEL_DIR)
 model.load_weights(WEIGHTS, by_name=True)
 
