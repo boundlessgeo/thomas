@@ -102,7 +102,7 @@ class BuildingDataset(utils.Dataset):
         # print("Loading mask for image id "+self.image_lookup[image_id])
 
         mask_dir = self.PATH+'/osm/'+self.image_lookup[image_id]
-        masks = glob.glob(mask_dir,'*'+self.image_lookup[image_id])
+        masks = glob.glob(os.path.join(mask_dir,'*'+self.image_lookup[image_id]))
         # masks should be an array of file names like building-0-Z_X_Y.png
 
         mask_array = np.zeros((256, 256, len(masks)), dtype=np.uint8)
