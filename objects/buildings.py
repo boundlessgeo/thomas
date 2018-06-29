@@ -65,10 +65,10 @@ class BuildingConfig(Config):
     TRAIN_ROIS_PER_IMAGE = 32
 
     # Use a small epoch since the data is simple
-    STEPS_PER_EPOCH = 1000
+    STEPS_PER_EPOCH = 10
 
     # use small validation steps since the epoch is small
-    VALIDATION_STEPS = 50
+    VALIDATION_STEPS = 10
     USE_MINI_MASK = False
 
 
