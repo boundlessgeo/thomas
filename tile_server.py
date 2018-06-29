@@ -12,7 +12,7 @@ app = Flask(__name__)
 
 
 PLATFORM = platform.platform()
-print(PLATFORM)
+print(PLATFORM + "(Tile Server)")
 ROOT_DIR = os.path.abspath("/home/ubuntu/thomas/")
 
 if(PLATFORM.startswith("Darwin")):
@@ -22,26 +22,12 @@ MODEL_DIR = os.path.join(ROOT_DIR,"logs")
 WEIGHTS = os.path.join(ROOT_DIR,'mask_rcnn_buildings_1.h5')
 
 
-model = None
-
 @app.route('/', methods=['GET'])
 def index():
     return send_file('map.html',"text/html")
 
 @app.route('/tiles/<int:z>/<int:x>/<int:y>', methods=['GET'])
 def tile(z, x, y):
-    global model
-    if model == None:
-        keras.backend.clear_session()
-        config = BuildingConfig()
-        model = modellib.MaskRCNN(mode="inference", config=config,
-                              model_dir=MODEL_DIR)
-        model.load_weights(WEIGHTS, by_name=True)
-        #global graph
-        #graph = tf.get_default_graph()
-
-
-
 
     with graph.as_default():
         request_start_time = time.time()

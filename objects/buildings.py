@@ -21,7 +21,7 @@ from mrcnn import model as modellib, visualize
 
 # Root directory of the project
 PLATFORM = platform.platform()
-print(PLATFORM)
+print(PLATFORM + "(Model)")
 ROOT_DIR = os.path.abspath("/home/ubuntu/thomas/")
 
 if(PLATFORM.startswith("Darwin")):
