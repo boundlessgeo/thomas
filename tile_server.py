@@ -55,7 +55,7 @@ def tile(z, x, y):
         for i in range(len(r['rois'])):
             if r['scores'][i] > 0.93:
                 image = visualize.draw_box(image, r['rois'][i], (255, 0, 0))
-            # image = visualize.apply_mask(image, r['masks'][i], (255, 0, 0))
+                image = visualize.apply_mask(image, r['masks'][i], (255, 0, 0))
         output = Image.fromarray(image, 'RGB')
         byte_io = BytesIO()
         output.save(byte_io, 'PNG')
