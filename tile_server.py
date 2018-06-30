@@ -53,14 +53,14 @@ def tile(z, x, y):
         r = model.detect([image], verbose=1)[0]
         # output = Image.new('RGBA',(256,256),(0,0,0,0))
         for i in range(len(r['rois'])):
-            image = visualize.draw_box(image, r['rois'][i], (255, 0, 0))
+            if r['scores'][i] > 0.9:
+                image = visualize.draw_box(image, r['rois'][i], (255, 0, 0))
             # image = visualize.apply_mask(image, r['masks'][i], (255, 0, 0))
         output = Image.fromarray(image, 'RGB')
         byte_io = BytesIO()
         output.save(byte_io, 'PNG')
         byte_io.seek(0)
         request_end_time = time.time();
-        print(request_end_time - request_start_time)
         return send_file(byte_io, mimetype='image/png')
 
 
