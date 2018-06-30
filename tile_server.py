@@ -52,8 +52,10 @@ def tile(z, x, y):
         image = skimage.io.imread(url)
         r = model.detect([image], verbose=1)[0]
         # output = Image.new('RGBA',(256,256),(0,0,0,0))
+    print(r)
         for i in range(len(r['rois'])):
             if r['scores'][i] > 0.93:
+                #image = visualize.draw_box(image, r['rois'][i], (255, 0, 0))
                 image = visualize.draw_box(image, r['rois'][i], (255, 0, 0))
                 image = visualize.apply_mask(image, r['masks'][i], (255, 0, 0))
         output = Image.fromarray(image, 'RGB')
