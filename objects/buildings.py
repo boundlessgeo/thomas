@@ -47,7 +47,8 @@ class BuildingConfig(Config):
     # Train on 1 GPU and 8 images per GPU. We can put multiple images on each
     # GPU because the images are small. Batch size is 8 (GPUs * images/GPU).
     GPU_COUNT = 8
-    IMAGES_PER_GPU = 24
+    # todo: I think this needs to be bigger
+    IMAGES_PER_GPU = 240
 
     # Number of classes (including background)
     NUM_CLASSES = 1 + 1  # background + 3 shapes
@@ -69,7 +70,7 @@ class BuildingConfig(Config):
 
     # use small validation steps since the epoch is small
     VALIDATION_STEPS = 10
-    USE_MINI_MASK = False
+    USE_MINI_MASK = True
 
 
 
