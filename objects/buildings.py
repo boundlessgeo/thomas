@@ -70,7 +70,7 @@ class BuildingConfig(Config):
 
     # use small validation steps since the epoch is small
     VALIDATION_STEPS = 10
-    USE_MINI_MASK = True
+    USE_MINI_MASK = False
 
 
 
