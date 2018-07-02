@@ -48,7 +48,7 @@ class BuildingConfig(Config):
     # GPU because the images are small. Batch size is 8 (GPUs * images/GPU).
     GPU_COUNT = 8
     # todo: I think this needs to be bigger
-    IMAGES_PER_GPU = 240
+    IMAGES_PER_GPU = 50
 
     # Number of classes (including background)
     NUM_CLASSES = 1 + 1  # background + 3 shapes
