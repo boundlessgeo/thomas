@@ -15,15 +15,15 @@ app = Flask(__name__)
 
 PLATFORM = platform.platform()
 print(PLATFORM)
+
 ROOT_DIR = os.path.abspath("/home/ubuntu/thomas/")
+WEIGHTS = os.path.join(ROOT_DIR, 'mask_rcnn_buildings_0080.h5')
 
 if (PLATFORM.startswith("Darwin")):
     ROOT_DIR = os.path.abspath("/Users/tingold/code/thomas/")
+    WEIGHTS = os.path.join(ROOT_DIR, 'buildings_latest.h5')
 
 MODEL_DIR = os.path.join(ROOT_DIR, "logs")
-# WEIGHTS = os.path.join(ROOT_DIR, 'mask_rcnn_buildings_0080.h5')
-WEIGHTS = os.path.join(ROOT_DIR, 'buildings_latest.h5')
-
 
 class InferenceConfig(BuildingConfig):
     IMAGES_PER_GPU = 1
