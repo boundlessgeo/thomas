@@ -157,19 +157,24 @@ def mask_tile(image, detection, color, alpha=0.5, min_score=0.97):
     rois = detection['rois']
 
     # wipe out masks under a certain confidence level
+
+    new_masks = np.copy(masks)
+    above = 0
+    below = 0
     for c in range(len(scores)):
-
         if scores[c] < min_score:
-            masks[c].fill(False)
+            below += 1
+            new_masks[:,:,c] = False
         else:
+            above += 1
             alpha = visualize.draw_box(alpha,rois[c],color)
+    # print("masks above cf: "+str(above))
+    # print("masks below cf: " + str(below))
+    # print("total masks: " + str(len(masks)))
+    # print("total rois: " + str(len(rois)))
+    # print("total scores: " + str(len(rois)))
+    mask = (np.sum(new_masks, -1, keepdims=True, dtype=int) >= 1) * 1
 
-    mask = (np.sum(masks, -1, keepdims=True, dtype=int) >= 1) * 1
-    # image = np.zeros((256, 256, 4))
-    # image[:,:,0] = 256
-    # image[:,:,3] = 256
-    """Apply the given mask to the image.
-    """
     for c in range(3):
         # paint mask
         alpha[:, :, c] = np.where(mask[:, :, 0] == 1,
