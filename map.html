@@ -1,14 +1,40 @@
 <html>
 <head>
-    <title>XYZ</title>
+    <title>BSE NextGen Processing</title>
     <link rel="stylesheet" href="https://openlayers.org/en/v5.0.0/css/ol.css" type="text/css">
     <!-- The line below is only needed for old environments like Internet Explorer and Android 4.x -->
     <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=requestAnimationFrame,Element.prototype.classList,URL"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/openlayers/4.6.5/ol.js"></script>
+    <style type="text/css">
+        #layer-picker {
+            position: absolute;
+            top: 80px;
+            left: 20px;
+            background: rgba(0,0,0,0.5);
+            font-family: Sans-Serif;
+            color: rgba(255,0.0,1);
+            }
+    </style>
 </head>
+
 <body>
 <div id="map" class="map"></div>
+<div id="layer-picker">
+    Detect Buildings <input type="checkbox" id="detect" name="Detect Buildings" value="unchecked" onchange="javascript:toggleML()">
+</div>
 <script>
+
+        mlLayer = new ol.layer.Tile({
+                visible: false,
+                source: new ol.source.XYZ({
+                    //url: 'http://ec2-18-209-221-0.compute-1.amazonaws.com:5000/tiles/{z}/{x}/{y}'
+                    url: 'http://35.170.79.73:5000/tiles/{z}/{x}/{y}'
+                    //url: 'http://localhost:5000/tiles/{z}/{x}/{y}'
+
+                })
+            })
+
+
     var map = new ol.Map({
         target: 'map',
         layers: [
@@ -18,13 +44,7 @@
                     //url: 'http://api.boundlessgeo.io/v1/basemaps/dg/recent/{}/{}/{}.png?apikey=MTIzND9UaGF0cyB0aGUga2luZCBvZiB0aGluZyBhbiBpZGlvdCB3b3VsZCBoYXZlIG9uIGhpcyBsdWdnYWdlIQ'
                 })
             }),
-            new ol.layer.Tile({
-                source: new ol.source.XYZ({
-                    //url: 'http://ec2-18-209-221-0.compute-1.amazonaws.com:5000/tiles/{z}/{x}/{y}'
-                    url: 'http://35.170.79.73:5000/tiles/{z}/{x}/{y}'
-                    //url: 'http://localhost:5000/tiles/{z}/{x}/{y}'
-                })
-            })
+           mlLayer
 
         ],
         view: new ol.View({
@@ -32,6 +52,10 @@
             zoom: 18
         })
     });
+
+    function toggleML(){
+        mlLayer.setVisible(document.getElementById("detect").checked)
+    }
 </script>
 </body>
 </html>
