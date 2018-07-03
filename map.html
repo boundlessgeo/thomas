@@ -1,29 +1,35 @@
 <html>
-  <head>
+<head>
     <title>XYZ</title>
     <link rel="stylesheet" href="https://openlayers.org/en/v5.0.0/css/ol.css" type="text/css">
     <!-- The line below is only needed for old environments like Internet Explorer and Android 4.x -->
     <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=requestAnimationFrame,Element.prototype.classList,URL"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/openlayers/4.6.5/ol.js"></script>
-  </head>
-  <body>
-    <div id="map" class="map"></div>
-    <script>
-var map = new ol.Map({
-  target: 'map',
-  layers: [
-    new ol.layer.Tile({
-      source: new ol.source.XYZ({
-        url: 'http://ec2-18-209-221-0.compute-1.amazonaws.com:5000/tiles/{z}/{x}/{y}'
+</head>
+<body>
+<div id="map" class="map"></div>
+<script>
+    var map = new ol.Map({
+        target: 'map',
+        layers: [
+            new ol.layer.Tile({
+                source: new ol.source.XYZ({
+                    url: 'https://b.tiles.mapbox.com/v4/mapbox.satellite/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NDg1bDA1cjYzM280NHJ5NzlvNDMifQ.d6e-nNyBDtmQCVwVNivz7A'
+                })
+            }),
+            new ol.layer.Tile({
+                source: new ol.source.XYZ({
+                    //url: 'http://ec2-18-209-221-0.compute-1.amazonaws.com:5000/tiles/{z}/{x}/{y}'
+                    url: 'http://localhost:5000/tiles/{z}/{x}/{y}'
+                })
+            })
 
-      })
-    })
-  ],
-  view: new ol.View({
-    center: [-8497670.87893,4798727.96074],
-    zoom: 18
-  })
-});
-    </script>
-  </body>
+        ],
+        view: new ol.View({
+            center: [-8497670.87893, 4798727.96074],
+            zoom: 18
+        })
+    });
+</script>
+</body>
 </html>

@@ -25,10 +25,10 @@ PLATFORM = platform.platform()
 print(PLATFORM + "(Model)")
 ROOT_DIR = os.path.abspath("/home/ubuntu/thomas/")
 
-if(PLATFORM.startswith("Darwin")):
+if (PLATFORM.startswith("Darwin")):
     ROOT_DIR = os.path.abspath("/Users/tingold/code/thomas/")
 
-MODEL_DIR = os.path.join(ROOT_DIR,"logs")
+MODEL_DIR = os.path.join(ROOT_DIR, "logs")
 COCO_MODEL_PATH = os.path.join(ROOT_DIR, "mask_rcnn_coco.h5")
 # Import Mask RCNN
 sys.path.append(ROOT_DIR)  # To find local version of the library
@@ -72,16 +72,13 @@ class BuildingConfig(Config):
     USE_MINI_MASK = False
 
 
-
-
 class BuildingDataset(utils.Dataset):
-
-    #PATH = '/Users/tingold/code/Mask_RCNN/samples/objects/training_data'
-    PATH = os.path.join(ROOT_DIR,'objects/training_data')
+    # PATH = '/Users/tingold/code/Mask_RCNN/samples/objects/training_data'
+    PATH = os.path.join(ROOT_DIR, 'objects/training_data')
 
     image_lookup = []
 
-    def load_buildings(self,):
+    def load_buildings(self, ):
         self.add_class("buildings", 1, "building")
         print("Loading buildings")
 
@@ -89,7 +86,7 @@ class BuildingDataset(utils.Dataset):
         cnt = 0
         for img_file in image_filenames:
             # id is the tile name without sat in front
-            id = img_file.replace("sat","", 1)
+            id = img_file.replace("sat", "", 1)
 
             abs_img = self.PATH + "/sat/" + img_file
             self.image_lookup.insert(cnt, id)
@@ -102,7 +99,7 @@ class BuildingDataset(utils.Dataset):
         # print("Loading mask for image id "+self.image_lookup[image_id])
 
         real_image_id = self.image_lookup[image_id]
-        mask_dir = self.PATH+'/osm/'+real_image_id+'/**'
+        mask_dir = self.PATH + '/osm/' + real_image_id + '/**'
         masks = glob.glob(mask_dir)
         # masks should be an array of file names like building-0-Z_X_Y.png
         mask_array = np.empty((256, 256, len(masks)), dtype=np.uint8)
@@ -111,11 +108,10 @@ class BuildingDataset(utils.Dataset):
             mask_image = Image.open(m)
             red, green, blue, alpha = mask_image.split()
             # Pack masks into an array
-            mask_array[..., i-1] = np.asarray(red)
+            mask_array[..., i - 1] = np.asarray(red)
 
         class_ids = np.ones([len(masks)])
         return mask_array, class_ids
-
 
     def load_image(self, image_id):
         """Generate an image from the specs of the given image ID.
@@ -129,6 +125,7 @@ class BuildingDataset(utils.Dataset):
         img = Image.open(img_url)
         return np.array(img)
 
+
 def detect(model):
     print("Running on {}".format(args.img))
     # Read image
@@ -137,31 +134,63 @@ def detect(model):
     r = model.detect([image], verbose=1)[0]
 
     for i in range(len(r['rois'])):
-        image = visualize.draw_box(image,r['rois'][i],(255,0,0))
-        image = visualize.apply_mask(image,r['masks'][i],(255,0,0))
+        image = visualize.draw_box(image, r['rois'][i], (255, 0, 0))
+        image = visualize.apply_mask(image, r['masks'][i], (255, 0, 0))
 
     # Save output
     file_name = "splash_{:%Y%m%dT%H%M%S}.png".format(datetime.now())
     skimage.io.imsave(file_name, image)
 
-def color_splash(image, mask):
-    """Apply color splash effect.
-    image: RGB image [height, width, 3]
-    mask: instance segmentation mask [height, width, instance count]
 
-    Returns result image.
+def mask_tile(image,masks, color, alpha=0.5):
+    """ Return and RGBA image that is transparent except for the mask
     """
-    # Make a grayscale copy of the image. The grayscale copy still
-    # has 3 RGB channels, though.
-    gray = skimage.color.gray2rgb(skimage.color.rgb2gray(image)) * 255
-    # Copy color pixels from the original color image where mask is set
-    if mask.shape[-1] > 0:
-        # We're treating all instances as one, so collapse the mask into one layer
-        mask = (np.sum(mask, -1, keepdims=True) >= 1)
-        splash = np.where(mask, image, gray).astype(np.uint8)
-    else:
-        splash = gray.astype(np.uint8)
-    return splash
+    mask = (np.sum(masks, -1, keepdims=True, dtype=int) >= 1) * 1
+    # image = np.zeros((256, 256, 4))
+    # image[:,:,0] = 256
+    # image[:,:,3] = 256
+    """Apply the given mask to the image.
+    """
+    for c in range(3):
+        image[:, :, c] = np.where(mask[:,:,0] == 1,
+                                  image[:, :, c] * color[c],
+                                  #(1 - alpha) + alpha * color[c] * 255,
+                                  image[:, :, c])
+    return image
+
+
+# transparent image
+#
+# image[:, :, 0] = 255
+# image[:, :, 3] = 255
+#
+# if masks.shape[-1] > 0:
+#     mask = (np.sum(masks, -1, keepdims=True, dtype=int) >= 1) * 255
+#     image = visualize.apply_mask(image,mask[:,:,0],(255,0,0))
+
+# image.paste(mask,(0,0),mask=mask)
+# img = np.zeros((256, 256, 4))
+# img[:, :, 0] = mask[:, :, 0]
+# img[:, :, 3] = mask[:, :, 0]
+# im
+# image = Image.fromarray(img, 'RGBA')
+# image.put
+
+# a = Image.fromarray(np.full((256,256),255),'L')
+# r = Image.fromarray(mask, 'L')
+# image = Image.merge('RGBA', (r, g, b, a))
+# image.paste(image,(0,0),mask_image)
+# return image
+
+# gray = skimage.color.gray2rgb(skimage.color.rgb2gray(image)) * 255
+# # Copy color pixels from the original color image where mask is set
+# if mask.shape[-1] > 0:
+#     # We're treating all instances as one, so collapse the mask into one layer
+#     mask = (np.sum(mask, -1, keepdims=True) >= 1)
+#     splash = np.where(mask, image, gray).astype(np.uint8)
+# else:
+#     splash = gray.astype(np.uint8)
+# return splash
 
 
 if __name__ == '__main__':
@@ -181,7 +210,6 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     if args.command == "train":
-
         config = BuildingConfig()
         model = modellib.MaskRCNN(mode="training", config=config, model_dir=MODEL_DIR)
         # Training
@@ -194,17 +222,15 @@ if __name__ == '__main__':
         dataset_val.prepare()
 
         model.load_weights(args.weights, by_name=True,
-                       exclude=["mrcnn_class_logits", "mrcnn_bbox_fc",
-                                "mrcnn_bbox", "mrcnn_mask"])
+                           exclude=["mrcnn_class_logits", "mrcnn_bbox_fc",
+                                    "mrcnn_bbox", "mrcnn_mask"])
 
         model.train(dataset_train, dataset_val,
-                learning_rate=config.LEARNING_RATE,
-                epochs=20,
-                layers='heads')
-
+                    learning_rate=config.LEARNING_RATE,
+                    epochs=20,
+                    layers='heads')
 
     if args.command == "run":
-
         class InferenceConfig(BuildingConfig):
             # Set batch size to 1 since we'll be running inference on
             # one image at a time. Batch size = GPU_COUNT * IMAGES_PER_GPU
