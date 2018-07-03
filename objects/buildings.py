@@ -142,9 +142,28 @@ def detect(model):
     skimage.io.imsave(file_name, image)
 
 
-def mask_tile(image,masks, color, alpha=0.5):
-    """ Return and RGBA image that is transparent except for the mask
+def mask_tile(image, detection, color, alpha=0.5, min_score=0.97):
+    """ Return an RGBA image that is transparent except for the mask
     """
+    #
+
+    alpha = np.zeros((256,256,4))
+    for n in range(3):
+        alpha[:,:,n] = image[:,:,n]
+    alpha = image
+
+    scores = detection['scores']
+    masks = detection['masks']
+    rois = detection['rois']
+
+    # wipe out masks under a certain confidence level
+    for c in range(len(scores)):
+
+        if scores[c] < min_score:
+            masks[c].fill(False)
+        else:
+            alpha = visualize.draw_box(alpha,rois[c],color)
+
     mask = (np.sum(masks, -1, keepdims=True, dtype=int) >= 1) * 1
     # image = np.zeros((256, 256, 4))
     # image[:,:,0] = 256
@@ -152,11 +171,16 @@ def mask_tile(image,masks, color, alpha=0.5):
     """Apply the given mask to the image.
     """
     for c in range(3):
-        image[:, :, c] = np.where(mask[:,:,0] == 1,
-                                  image[:, :, c] * color[c],
-                                  #(1 - alpha) + alpha * color[c] * 255,
-                                  image[:, :, c])
-    return image
+        # paint mask
+        alpha[:, :, c] = np.where(mask[:, :, 0] == 1,
+                                  alpha[:, :, c] * color[c],
+                                  # (1 - alpha) + alpha * color[c] * 255,
+                                  alpha[:, :, c])
+    # # remove other pixels
+    # alpha[:, :, 3] = np.where(mask[:, :, 0] == 0,
+    #                               alpha[:, :, 3] * 0,
+    #                               alpha[:, :, 3])
+    return alpha
 
 
 # transparent image

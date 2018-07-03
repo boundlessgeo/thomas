@@ -11,7 +11,6 @@ from io import BytesIO
 import tensorflow as tf
 import numpy as np
 
-
 app = Flask(__name__)
 
 PLATFORM = platform.platform()
@@ -22,7 +21,8 @@ if (PLATFORM.startswith("Darwin")):
     ROOT_DIR = os.path.abspath("/Users/tingold/code/thomas/")
 
 MODEL_DIR = os.path.join(ROOT_DIR, "logs")
-WEIGHTS = os.path.join(ROOT_DIR, 'mask_rcnn_buildings_0080.h5')
+# WEIGHTS = os.path.join(ROOT_DIR, 'mask_rcnn_buildings_0080.h5')
+WEIGHTS = os.path.join(ROOT_DIR, 'buildings_latest.h5')
 
 
 class InferenceConfig(BuildingConfig):
@@ -47,18 +47,20 @@ def index():
 @app.route('/tiles/<int:z>/<int:x>/<int:y>', methods=['GET'])
 def tile(z, x, y):
     with graph.as_default():
-    # if z != 18:
-    # only service level 18 for now
-    #    abort(404)
-        url = "https://b.tiles.mapbox.com/v4/mapbox.satellite/{}/{}/{}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NDg1bDA1cjYzM280NHJ5NzlvNDMifQ.d6e-nNyBDtmQCVwVNivz7A".format(z, x, y)
+        # if z != 18:
+        # only service level 18 for now
+        #    abort(404)
+        url = "https://b.tiles.mapbox.com/v4/mapbox.satellite/{}/{}/{}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NDg1bDA1cjYzM280NHJ5NzlvNDMifQ.d6e-nNyBDtmQCVwVNivz7A".format(
+            z, x, y)
+        # url ='http://api.boundlessgeo.io/v1/basemaps/dg/recent/{}/{}/{}.png?apikey=MTIzND9UaGF0cyB0aGUga2luZCBvZiB0aGluZyBhbiBpZGlvdCB3b3VsZCBoYXZlIG9uIGhpcyBsdWdnYWdlIQ'.format(z,x,y)
         image = io.imread(url)
+
         r = model.detect([image], verbose=1)[0]
         # output = Image.new('RGBA',(256,256),(0,0,0,0))
         # image = color_splash(image,r['masks'])
-        #output_image = np.zeros((256, 256, 4))
+        # output_image = np.zeros((256, 256, 4))
 
-        output_image = mask_tile(image,r['masks'], (255,0,0), alpha=0.5)
-
+        output_image = mask_tile(image, r, (255, 0, 0), alpha=0.5)
         # for i in range(len(r['rois'])):
         #     if r['scores'][i] > 0.93:
         #         output_image = visualize.apply_mask(output_image, r['masks'][i], (255, 0, 0), alpha=0.5)
@@ -68,7 +70,7 @@ def tile(z, x, y):
         #         #image = visualize.draw_box(image, r['rois'][i], (255, 0, 0))
         #         image = visualize.apply_mask(image, r['masks'], (255, 0, 0))
         # output = Image.fromarray(image, 'RGB')
-        #output = mask_tile(r['masks'])
+        # output = mask_tile(r['masks'])
         output = Image.fromarray(output_image)
         byte_io = BytesIO()
         output.save(byte_io, 'PNG')
