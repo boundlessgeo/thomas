@@ -109,9 +109,9 @@ class BuildingDataset(utils.Dataset):
         class_ids = np.zeros([len(masks)])
         for i, m in enumerate(masks):
             mask_image = Image.open(m)
-            red, green, blue = mask_image.split()
+            bands = mask_image.slpit();
             # Pack masks into an array
-            mask_array[..., i - 1] = np.asarray(red)
+            mask_array[..., i - 1] = np.asarray(bands[0])
             if "building" in m:
                 class_ids[i] = 1
             if "water" in m:
