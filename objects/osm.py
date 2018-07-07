@@ -251,7 +251,7 @@ if __name__ == '__main__':
         model = modellib.MaskRCNN(mode="training", config=config, model_dir=MODEL_DIR)
         # Training
         dataset_train = BuildingDataset()
-        dataset_train.load_buildings()
+        dataset_train.load_osm()
         dataset_train.prepare()
         # Validation
         dataset_val = BuildingDataset()
