@@ -50,7 +50,7 @@ class BuildingConfig(Config):
     IMAGES_PER_GPU = 8
 
     # Number of classes (including background)
-    NUM_CLASSES = 1 + 1  # background + 3 shapes
+    NUM_CLASSES = 1 + 3  # background + 3 classes
 
     # Use small images for faster training. Set the limits of the small side
     # the large side, and that determines the image shape.
@@ -113,11 +113,11 @@ class BuildingDataset(utils.Dataset):
             # Pack masks into an array
             mask_array[..., i - 1] = np.asarray(bands[0])
             if "building" in m:
-                class_ids[i] = 1
+                class_ids[i-1] = 1
             if "water" in m:
-                class_ids[i] = 2
+                class_ids[i-1] = 2
             if "transportation" in m:
-                class_ids[i] = 3
+                class_ids[i-1] = 3
 
         return mask_array, class_ids
 
