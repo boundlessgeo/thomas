@@ -2,7 +2,7 @@ import time
 
 from skimage import io
 from flask import Flask, send_file
-from objects.buildings import BuildingConfig, mask_tile
+from objects.osm import BuildingConfig, mask_tile
 import os, platform
 from mrcnn import model as modellib
 from mrcnn import visualize as visualize

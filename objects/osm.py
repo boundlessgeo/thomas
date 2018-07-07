@@ -78,9 +78,11 @@ class BuildingDataset(utils.Dataset):
 
     image_lookup = []
 
-    def load_buildings(self, ):
-        self.add_class("buildings", 1, "building")
-        print("Loading buildings")
+    def load_osm(self, ):
+        self.add_class("osm", 1, "building")
+        self.add_class("osm", 2, "water")
+        self.add_class("osm", 3, "road")
+        print("Loading masks")
 
         image_filenames = os.listdir(self.PATH + '/sat')
         cnt = 0
@@ -104,13 +106,19 @@ class BuildingDataset(utils.Dataset):
         # masks should be an array of file names like building-0-Z_X_Y.png
         mask_array = np.empty((256, 256, len(masks)), dtype=np.uint8)
 
+        class_ids = np.zeros([len(masks)])
         for i, m in enumerate(masks):
             mask_image = Image.open(m)
             red, green, blue, alpha = mask_image.split()
             # Pack masks into an array
             mask_array[..., i - 1] = np.asarray(red)
+            if "building" in m:
+                class_ids[i] = 1
+            if "water" in m:
+                class_ids[i] = 2
+            if "transportation" in m:
+                class_ids[i] = 3
 
-        class_ids = np.ones([len(masks)])
         return mask_array, class_ids
 
     def load_image(self, image_id):
