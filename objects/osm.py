@@ -42,7 +42,7 @@ class BuildingConfig(Config):
     to the toy shapes dataset.
     """
     # Give the configuration a recognizable name
-    NAME = "buildings"
+    NAME = "osm"
 
     # Train on 1 GPU and 8 images per GPU. We can put multiple images on each
     # GPU because the images are small. Batch size is 8 (GPUs * images/GPU).
@@ -92,7 +92,7 @@ class BuildingDataset(utils.Dataset):
 
             abs_img = self.PATH + "/sat/" + img_file
             self.image_lookup.insert(cnt, id)
-            self.add_image("buildings", image_id=cnt, path=abs_img, width=256, height=256)
+            self.add_image("osm", image_id=cnt, path=abs_img, width=256, height=256)
 
     def load_mask(self, image_id):
         # Build mask of shape [height, width, instance_count] and list
