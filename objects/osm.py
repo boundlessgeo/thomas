@@ -109,7 +109,7 @@ class BuildingDataset(utils.Dataset):
         class_ids = np.zeros([len(masks)])
         for i, m in enumerate(masks):
             mask_image = Image.open(m)
-            bands = mask_image.slpit()
+            bands = mask_image.split()
             # Pack masks into an array
             mask_array[..., i - 1] = np.asarray(bands[0])
             if "building" in m:
