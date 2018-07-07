@@ -255,7 +255,7 @@ if __name__ == '__main__':
         dataset_train.prepare()
         # Validation
         dataset_val = BuildingDataset()
-        dataset_val.load_buildings()
+        dataset_val.load_osm()
         dataset_val.prepare()
 
         model.load_weights(args.weights, by_name=True,
